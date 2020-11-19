@@ -3,32 +3,39 @@ package main
 import (
 	"fmt"
 	"encoding/csv"
-	"bufio"
+	"os"
 )
 
 func printName(fname, sname string) {
 	fmt.Println(fname, sname)
 }
 
-func readName() {
-	file, err := os.Open("russian_names.csv")
+func readCSV(fileName string) map[int]string {
+	data := make(map[int]string)
+	file, err := os.Open(fileName)
 	if err != nil {
-		panic("ERROR!!!")
+		panic(err)
 	}
 	defer file.Close()
 
 	r := csv.NewReader(file)
-	data, err := r.ReadAll()
-	if err != nil {
-		// Когда мы читаем данные до конца файла io.EOF не возвращается, а служит сигналом к завершению чтения
-		// ...
+	r.Comma = ';'	
+	i := 0
+	for {
+		record, e := r.Read()
+		if e != nil {
+			break
+		}
+		//fmt.Printf("%T %T\n", record[0], record[1])
+		data[i] = record[1]
+		i++
 	}
-
-	for _, row := range data {
-		fmt.Println(row)
-	}
+	return data
 }
 
 func main() {
-	printName("Гриша", "Первый")
+	names := readCSV("./russian_names.csv")
+	surnames := readCSV("./russian_surnames.csv")
+	fmt.Println(len(names), len(surnames))
+	printName(names[5], surnames[5])
 }
