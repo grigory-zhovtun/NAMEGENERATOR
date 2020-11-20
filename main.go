@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"encoding/csv"
 	"os"
+	"math/rand"
+	"time"
 )
 
 func printName(fname, sname string) {
@@ -33,9 +35,18 @@ func readCSV(fileName string) map[int]string {
 	return data
 }
 
+func generatorID(nlen, slen int) (int, int) {
+	rand.Seed(time.Now().UTC().UnixNano())
+	return rand.Intn(nlen), rand.Intn(slen)
+}
+
 func main() {
 	names := readCSV("./russian_names.csv")
 	surnames := readCSV("./russian_surnames.csv")
-	fmt.Println(len(names), len(surnames))
-	printName(names[5], surnames[5])
+	s:=""
+	for {
+		i, j := generatorID(len(names), len(surnames))
+		printName(names[i], surnames[j])
+		fmt.Scanf("%s", s)
+	}
 }
