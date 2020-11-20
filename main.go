@@ -8,6 +8,7 @@ import (
 	"time"
 )
 
+
 func printName(fname, sname string) {
 	fmt.Println(fname, sname)
 }
